@@ -1,3 +1,0 @@
-pants d 1 1 2
-blouse tjddus 1 1 1
-pad tjdwnd 4 2 3445
