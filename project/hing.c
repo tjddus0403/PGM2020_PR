@@ -31,7 +31,7 @@ void main()
 	int quit_num=0;
 	cloth_t* list_head=NULL;
 	FILE* fp=NULL;
-//	list_head=open(list_head);
+
 	while(1)
 	{	int save_choice;
 		q=choice();
