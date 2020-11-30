@@ -22,12 +22,13 @@ void open_closet(cloth_t* list_head);
 void wash_method(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*));
 void save(cloth_t* list_head);
 void untracked(cloth_t* list_head);
+void quit(cloth_t* list_head);
 int choice();
 void main()
 {
 	int num=0;
 	int q=0;
-	int quit=0;
+	int quit_num=0;
 	cloth_t* list_head=NULL;
 	FILE* fp=NULL;
 //	list_head=open(list_head);
@@ -58,23 +59,17 @@ void main()
 				wash_method(list_head,search);
 				break;
 			case 7:
-				printf("변경사항을 저장하시겠습니까?\n");
-				printf("1.Yes\n2.No\n");
-				scanf("%d",&save_choice);
-				if(save_choice==1)
-					save(list_head);
-				else
-					untracked(list_head);
-				quit=1;
+				save(list_head);
 				break;
 			case 8:
-				save(list_head);
+				quit(list_head);
+				quit_num=1;
 				break;
 			default:
 				printf("잘못된 숫자 입력\n");
 				break;
 		}
-		if(quit==1)
+		if(quit_num==1)
 			break;
 	}
 }
@@ -89,8 +84,9 @@ int choice()
 	printf("4. Delete the cloth\n");
 	printf("5. Open the closet\n");
 	printf("6. Washing method\n");
-	printf("7. Quit\n");
-	printf("8. Save the file\n");
+	printf("7. Save the file\n");
+	printf("8. Quit\n");
+
 	printf("Enter your choice number : ");
 	scanf("%d",&choice);
 	return choice;
@@ -134,10 +130,10 @@ void add(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*))
 }
 cloth_t* open(cloth_t* list_head)
 {
-	cloth_t* new_node;
 	char file[30];
-	printf("불러올 파일 이름 : ");
+	printf("불러올 파일 이름 : ");	
 	scanf("%s",file);
+	cloth_t* new_node;
 	FILE* fp=fopen(file,"r+");
 	
 	if(fp==NULL)
@@ -157,6 +153,7 @@ cloth_t* open(cloth_t* list_head)
 		list_head=new_node;
 	}
 	fclose(fp);
+	printf("Loaded the file\n");
 	return list_head;
 }
 
@@ -219,9 +216,12 @@ void wash_date(cloth_t* tmp_node,int location)
 
 }
 void save(cloth_t* list_head)
-{
+{	
+	char file[30];
+	printf("내용을 저장할 파일 이름(파일의 원본 내용은 삭제되니 주의하세요): ");
+	scanf("%s",file); 
 	cloth_t* tmp_node;
-	FILE* fp=fopen("wash.dat","w+");
+	FILE* fp=fopen(file,"w+");
 	if(fp==NULL)
 	{
 		printf("Cannot open file\n");
@@ -232,7 +232,6 @@ void save(cloth_t* list_head)
 		tmp_node=list_head;
 		fprintf(fp,"%s %s %d %d %d\n",tmp_node->name,tmp_node->owner,tmp_node->location,tmp_node->type,tmp_node->date);
 		list_head=list_head->next;
-		free(tmp_node);
 	}
 	fclose(fp);
 	printf("Saved the file\n");
@@ -370,6 +369,7 @@ void wash_method(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*))
 			break;
 		case 3:
 			printf("니트 종류의 옷이군요.\n처음 세탁 시 세탁소에 맡기고 그 이후부터는 손세탁하는 것을 추천해요.\n");
+			break;
 		case 4:
 			printf("면 종류의 옷이군요.\n집에서 세탁기를 이용하시면 됩니다.\n");
 			break;
@@ -379,4 +379,16 @@ void wash_method(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*))
 		default:
 			break;
 	}		
+}
+
+void quit(cloth_t* list_head)
+{
+	int quit_choice;
+	printf("변경사항을 저장하시겠습니까?\n");
+	printf("1.Yes\n2.No\n");
+	scanf("%d",&quit_choice);
+	if(quit_choice==1)
+		save(list_head);
+	untracked(list_head);
+	return;
 }
