@@ -30,12 +30,15 @@ void main()
 	int quit=0;
 	cloth_t* list_head=NULL;
 	FILE* fp=NULL;
-	list_head=open(list_head);
+//	list_head=open(list_head);
 	while(1)
 	{	int save_choice;
 		q=choice();
 		switch(q)
 		{
+			case 0:
+				list_head=open(list_head);
+				break;
 			case 1:
 				add(&list_head,search);
 				break;
@@ -64,6 +67,9 @@ void main()
 					untracked(list_head);
 				quit=1;
 				break;
+			case 8:
+				save(list_head);
+				break;
 			default:
 				printf("잘못된 숫자 입력\n");
 				break;
@@ -76,6 +82,7 @@ int choice()
 {
 	int choice;
 	printf("<Select the function>\n");
+	printf("0. Load the file\n");
 	printf("1. Add cloth\n");
 	printf("2. Show cloth's information\n");
 	printf("3. Change the cloth's information\n");
@@ -83,6 +90,7 @@ int choice()
 	printf("5. Open the closet\n");
 	printf("6. Washing method\n");
 	printf("7. Quit\n");
+	printf("8. Save the file\n");
 	printf("Enter your choice number : ");
 	scanf("%d",&choice);
 	return choice;
@@ -127,8 +135,10 @@ void add(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*))
 cloth_t* open(cloth_t* list_head)
 {
 	cloth_t* new_node;
-
-	FILE* fp=fopen("wash.dat","r+");
+	char file[30];
+	printf("불러올 파일 이름 : ");
+	scanf("%s",file);
+	FILE* fp=fopen(file,"r+");
 	
 	if(fp==NULL)
 	{
