@@ -12,6 +12,6 @@
 
 ## 프로그램 설치 및 실행 방법
 - $ git clone https://github.com/tjddus0403/2020project
-- cd 2020project
-- make
-- ./cloth_manage
+- $ cd 2020project
+- $ make
+- $ ./cloth_manage
