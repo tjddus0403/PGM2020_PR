@@ -14,4 +14,4 @@ Function
 - $ git clone https://github.com/tjddus0403/2020project
 - cd 2020project
 - make
-./cloth_manage
+- ./cloth_manage
