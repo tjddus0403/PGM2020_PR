@@ -1,6 +1,6 @@
 # 2020project
 # Cloth_Manage_Program (옷 관리 프로그램)
-기능
+<Function>
 - 파일 불러오기
 - 파일 저장하기
 - 종료하기
