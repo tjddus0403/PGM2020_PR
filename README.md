@@ -1,5 +1,5 @@
 # 2020project
-# Cloth_Manage_Program (옷 관리 프로그램)
+# Cloth_Manage_Program
 ## Function
 - 파일 불러오기
 - 파일 저장하기
