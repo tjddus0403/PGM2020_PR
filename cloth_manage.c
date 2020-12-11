@@ -17,7 +17,7 @@ cloth_t* search(cloth_t* list_head,char* name);
 void wash_date(cloth_t* tmp_node,int);
 void show_info(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*),void(*func_)(cloth_t*,int));
 void change_info(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*));
-void delete(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*));
+void delete(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*));
 void open_closet(cloth_t* list_head);
 void wash_method(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*));
 void save(cloth_t* list_head);
@@ -50,7 +50,7 @@ void main()
 				change_info(list_head,search);
 				break;
 			case 4:
-				delete(list_head,search);
+				delete(&list_head,search);
 				break;
 			case 5:
 				open_closet(list_head);
@@ -228,7 +228,7 @@ void save(cloth_t* list_head)
 		printf("Cannot open file\n");
 		return;
 	}
-	while(list_head)
+	while(list_head!=NULL)
 	{
 		tmp_node=list_head;
 		fprintf(fp,"%s %s %d %d %d\n",tmp_node->name,tmp_node->owner,tmp_node->location,tmp_node->type,tmp_node->date);
@@ -294,17 +294,18 @@ void change_info(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*))
 	}
 }
 
-void delete(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*))
-{
+void delete(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*))
+{	
 	cloth_t* tmp_node;
+	cloth_t* temp;
 	cloth_t* pre;
-
+	temp=*list_head;
 	char name[30];
 	int del_choice;
 	int num=0;
 	printf("삭제하고 싶은 옷 이름 : ");
 	scanf("%s",name);
-	tmp_node=func(list_head,name);
+	tmp_node=func(*list_head,name);
 	if(tmp_node==NULL)
 	{
 		printf("존재하지 않는 옷입니다.\n");
@@ -314,18 +315,30 @@ void delete(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*))
 	scanf("%d",&del_choice);
 	if (del_choice==1)		
 	{
-		while(list_head!=NULL)
+		if(strcmp(temp->name,name)==0)
 		{
-			if(strcmp(list_head->name,name)==0)
-			{	pre->next=list_head->next;
-				free(list_head);
-				printf("삭제되었습니다.\n");
+			*list_head=temp->next;
+			free(temp);
+			printf("삭제되었습니다.\n");
+		}
+		else
+		{
+			while(temp!=NULL)
+			{
+				if(strcmp(temp->name,name)==0)	
+				{
+					pre->next=temp->next;
+					free(temp);
+					printf("삭제되었습니다.\n");
+					break;
+				}
+				pre=temp;	
+				temp=temp->next;
 			}
-			pre=list_head;
-			list_head=list_head->next;
-		}	
+		}
 	}
 }
+
 void open_closet(cloth_t* list_head)
 {	
 	cloth_t* tmp_node;
