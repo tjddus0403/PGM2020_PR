@@ -11,7 +11,7 @@ typedef struct cloth{
 	struct cloth* next;
 }cloth_t;
 
-cloth_t* open(cloth_t* list_head);
+void open(cloth_t** list_head);
 void add(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*));
 cloth_t* search(cloth_t* list_head,char* name);
 void wash_date(cloth_t* tmp_node,int);
@@ -21,7 +21,7 @@ void delete(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*));
 void open_closet(cloth_t* list_head);
 void wash_method(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*));
 void save(cloth_t* list_head);
-void untracked(cloth_t* list_head);
+void untracked(cloth_t** list_head);
 void quit(cloth_t* list_head);
 int choice();
 void main()
@@ -38,7 +38,7 @@ void main()
 		switch(q)
 		{
 			case 0:
-				list_head=open(list_head);
+				open(&list_head);
 				break;
 			case 1:
 				add(&list_head,search);
@@ -128,7 +128,7 @@ void add(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*))
 	return;	
 	
 }
-cloth_t* open(cloth_t* list_head)
+void open(cloth_t** list_head)
 {
 	char file[30];
 	printf("내용이 적히지 않는 새로운 파일을 불러올 시, 불필요한 데이터가 추가될 수 있음에 유의하세요.\n");
@@ -140,7 +140,7 @@ cloth_t* open(cloth_t* list_head)
 	if(fp==NULL)
 	{
 		printf("Cannot open file\n");
-		return NULL;
+		return;
 	}
 	
 	while(1)
@@ -150,12 +150,12 @@ cloth_t* open(cloth_t* list_head)
 			break;
 		fscanf(fp,"%s %s %d %d %d\n", new_node->name,new_node->owner,&new_node->location,&new_node->type,&new_node->date);
 		
-		new_node->next=list_head;
-		list_head=new_node;
+		new_node->next=*list_head;
+		*list_head=new_node;
 	}
 	fclose(fp);
 	printf("Loaded the file\n");
-	return list_head;
+	return;
 }
 
 void show_info(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*),void(*func_)(cloth_t*,int))
@@ -181,14 +181,14 @@ void show_info(cloth_t* list_head,cloth_t*(*func)(cloth_t*,char*),void(*func_)(c
 }
 cloth_t* search(cloth_t* list_head,char* name)
 {
-	cloth_t* tmp=list_head;
-	while(tmp)
+	cloth_t* tmp_node=list_head;
+	while(tmp_node)
 	{
-		if(!strcmp(tmp->name, name))
-			return tmp;
-		tmp=tmp->next;
+		if(!strcmp(tmp_node->name, name))
+			return tmp_node;
+		tmp_node=tmp_node->next;
 	}
-	return tmp;
+	return tmp_node;
 }
 void wash_date(cloth_t* tmp_node,int location)
 {
@@ -221,7 +221,7 @@ void save(cloth_t* list_head)
 	char file[30];
 	printf("내용을 저장할 파일 이름(파일의 원본 내용은 삭제되니 주의하세요): ");
 	scanf("%s",file); 
-	cloth_t* tmp_node;
+	cloth_t* temp;
 	FILE* fp=fopen(file,"w+");
 	if(fp==NULL)
 	{
@@ -230,22 +230,22 @@ void save(cloth_t* list_head)
 	}
 	while(list_head!=NULL)
 	{
-		tmp_node=list_head;
-		fprintf(fp,"%s %s %d %d %d\n",tmp_node->name,tmp_node->owner,tmp_node->location,tmp_node->type,tmp_node->date);
+		temp=list_head;
+		fprintf(fp,"%s %s %d %d %d\n",temp->name,temp->owner,temp->location,temp->type,temp->date);
 		list_head=list_head->next;
 	}
 	fclose(fp);
 	printf("Saved the file\n");
 }
 
-void untracked(cloth_t* list_head)
+void untracked(cloth_t** list_head)
 {
-	cloth_t* tmp_node;
-	while(list_head)
+	cloth_t* temp;
+	while(*list_head)
 	{
-		tmp_node=list_head;
-		list_head=list_head->next;
-		free(tmp_node);
+		temp=*list_head;
+		*list_head=(*list_head)->next;
+		free(temp);
 	}
 	return;
 }
@@ -319,7 +319,7 @@ void delete(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*))
 		{
 			*list_head=temp->next;
 			free(temp);
-			printf("삭제되었습니다.\n");
+			printf("삭제되었습니다(막?).\n");
 		}
 		else
 		{
@@ -341,7 +341,7 @@ void delete(cloth_t** list_head,cloth_t*(*func)(cloth_t*,char*))
 
 void open_closet(cloth_t* list_head)
 {	
-	cloth_t* tmp_node;
+	cloth_t* temp;
 	int closet_choice;
 	int count=0;
 	printf("확인할 옷장을 선택하세요.\n");
@@ -350,9 +350,9 @@ void open_closet(cloth_t* list_head)
 
 	while(list_head)
     {
-        tmp_node=list_head;
-        if(tmp_node->location==closet_choice)
-		{	printf("%s\n",tmp_node->name);
+        temp=list_head;
+        if(temp->location==closet_choice)
+		{	printf("%s\n",temp->name);
 			if(closet_choice==6)
 				count++;}
         list_head=list_head->next;
@@ -403,6 +403,6 @@ void quit(cloth_t* list_head)
 	scanf("%d",&quit_choice);
 	if(quit_choice==1)
 		save(list_head);
-	untracked(list_head);
+	untracked(&list_head);
 	return;
 }
