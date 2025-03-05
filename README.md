@@ -12,10 +12,20 @@
 - 세탁 방법 찾기
 
 ## 프로그램 설치 및 실행 방법
+1. Git clone
 ```bash
 git clone https://github.com/tjddus0403/Laundry_Management_Project
+```
+2. Check the repo directory
+```bash
 cd Laundry_Management_Project
+```
+3. Compile
+```bash
 make
+```
+4. Run
+```bash
 ./cloth_manage
 ```
 
