@@ -1,4 +1,4 @@
-# Laundry_Management_Project
+# PGM2020_PR : Laundry_Management_Project
 2020 가을학기 프로그래밍및실습2 프로젝트입니다.
 
 ## 프로그램 기능
@@ -14,11 +14,11 @@
 ## 프로그램 설치 및 실행 방법
 1. Git clone
 ```bash
-git clone https://github.com/tjddus0403/Laundry_Management_Project
+git clone https://github.com/tjddus0403/PGM2020_PR
 ```
 2. Check the repo directory
 ```bash
-cd Laundry_Management_Project
+cd PGM2020_PR
 ```
 3. Compile
 ```bash
